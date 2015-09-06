@@ -1,8 +1,8 @@
 /*
-  High_Temp.h
+  High_Temp.cpp
 
   2014 Copyright (c) Seeed Technology Inc.  All right reserved.
-  
+
   Loovee
   2013-4-14
 
@@ -20,33 +20,31 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef __HIGH_TEMP_H__
-#define __HIGH_TEMP_H__
 
-class HighTemp{
+#include <Arduino.h>
+#include "High_Temp_MCP320x.h"
 
-public:
-
-    HighTemp(int _pinTmp, int _pinThmc);
-    
-    float getRoomTmp();                      // 
-    float getThmc();
-    
-    void begin();
-
-private
-    float tempRoom;                         // room temperature
-    float tempThmc;                         // thermocouple temperature
-    int pinRoomTmp;                         // pin of temperature sensor
-    int pinThmc;                            // pin of thermocouple
+// offset voltage, mv
+const float VOL_OFFSET = 350;                       
+// Av of amplifier
+const float AMP_AV     = 54.16;                    
 
 
-public:
+HighTempMCP320x::HighTemp(int _spiCS, int _pinTmp, int _pinThmc)
+{
+    spiChipSelect = _spiCS;
+    adc = MCP3208(spiChipSelect); 
+}
 
-    int getAnalog(int pin);
-    float K_VtoT(float mV);                 // K type thermocouple, mv->oC
-    float getThmcVol();                     // get voltage of thmc in mV
-};
 
+int HighTempMCP320x::getAnalog(int pin)
+{
+    long sum = 0;
 
-#endif
+    for(int i=0; i<32; i++)
+    {
+        sum += adc.analogRead(pin);
+    }
+    // 3.3V supply
+    return ((sum>>5));                                              
+

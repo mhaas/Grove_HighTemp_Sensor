@@ -20,32 +20,24 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef __HIGH_TEMP_H__
-#define __HIGH_TEMP_H__
+#ifndef __HIGH_TEMP_MCP320x_H__
+#define __HIGH_TEMP_MCPx320x_H__
 
-class HighTemp{
+#include <MCP3208.h>
+#include <High_Temp.h>
 
-public:
-
-    HighTemp(int _pinTmp, int _pinThmc);
-    
-    float getRoomTmp();                      // 
-    float getThmc();
-    
-    void begin();
-
-private
-    float tempRoom;                         // room temperature
-    float tempThmc;                         // thermocouple temperature
-    int pinRoomTmp;                         // pin of temperature sensor
-    int pinThmc;                            // pin of thermocouple
-
+class HighTempMCP320x: public HighTemp{
 
 public:
 
+    HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc) : HighTemp(_pinTmp, _pinThmc);
+    
+private:
+    int spiChipSelect;
+    MCP3208 adc;
+ 
+public:
     int getAnalog(int pin);
-    float K_VtoT(float mV);                 // K type thermocouple, mv->oC
-    float getThmcVol();                     // get voltage of thmc in mV
 };
 
 
