@@ -155,6 +155,6 @@ void HighTemp::setMaxAdcValue(int max) {
     maxAdcValue = max;
 }
 
-void HighTemp::setAnalogReference(int aref) {
+void HighTemp::setAnalogReference(float aref) {
     analogReference = aref;
 }
