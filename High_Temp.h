@@ -34,7 +34,7 @@ public:
     
     void begin();
 
-private
+private:
     float tempRoom;                         // room temperature
     float tempThmc;                         // thermocouple temperature
     int pinRoomTmp;                         // pin of temperature sensor
@@ -43,7 +43,7 @@ private
 
 public:
 
-    int getAnalog(int pin);
+    virtual int getAnalog(int pin);
     float K_VtoT(float mV);                 // K type thermocouple, mv->oC
     float getThmcVol();                     // get voltage of thmc in mV
 };
