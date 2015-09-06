@@ -94,7 +94,7 @@ int HighTemp::getAnalog(int pin)
 
 float HighTemp::getRoomTmp()
 {
-    int a = getAnalog(pinRoomTmp)*aref/3.3;                                // 3.3V supply
+    int a = getAnalog(pinRoomTmp)* analogReference /3.3;                                // 3.3V supply
     float resistance=(float)(maxAdcValue - a)*10000/a;                           // get the resistance of the sensor;
     float temperature=1/(log(resistance/10000)/3975+1/298.15)-273.15;   // convert to temperature via datasheet ;
     
@@ -113,7 +113,7 @@ float HighTemp::getRoomTmp()
 
 float HighTemp::getThmcVol()                                             // get voltage of thmc in mV
 {
-    float vout = (float)getAnalog(pinThmc)/maxAdcValue * aref * 1000;
+    float vout = (float)getAnalog(pinThmc)/maxAdcValue * analogReference * 1000;
     float vin  = (vout - VOL_OFFSET)/AMP_AV;
     return (vin);    
 }
