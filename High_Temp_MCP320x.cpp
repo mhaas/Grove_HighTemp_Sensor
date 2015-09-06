@@ -27,8 +27,8 @@
 
 HighTempMCP320x::HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc) : HighTemp(_pinTmp, _pinThmc)
 {
-    spiChipSelect = _spiCS;
-    adc = MCP3208(spiChipSelect); 
+    adc = MCP3208(_spiCS);
+    adc.begin();
 }
 
 
