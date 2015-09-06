@@ -36,11 +36,6 @@ HighTempMCP320x::HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc) : HighTe
 
 int HighTempMCP320x::getAnalog(int pin)
 {
-    Serial.print("HighTemp::MCP320x::getAnalog: pin: ");
-    Serial.print(pin);
-    Serial.print(" value: ");
     int val = adc.analogRead(pin);
-    Serial.print(val);
-    Serial.print("\n");
     return val;
 }

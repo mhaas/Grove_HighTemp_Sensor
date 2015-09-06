@@ -57,7 +57,7 @@ HighTemp::HighTemp(int _pinTmp, int _pinThmc)
 void HighTemp::begin()
 {
 
-    tempRoom   = getRoomTmp();
+    getRoomTmp();
     
     Serial.print("tempRoom = ");
     Serial.println(tempRoom);
@@ -73,7 +73,8 @@ float HighTemp::getThmc()
 {
     float vol  = getThmcVol();
 
-    tempThmc = K_VtoT(vol) + tempRoom;
+    tempThmc = K_VtoT(vol);
+    tempThmc += tempRoom;
     
     return tempThmc;
 }
@@ -97,15 +98,6 @@ float HighTemp::getRoomTmp()
     int a = getAnalog(pinRoomTmp)* analogReference /3.3;                                // 3.3V supply
     float resistance=(float)(maxAdcValue - a)*10000/a;                           // get the resistance of the sensor;
     float temperature=1/(log(resistance/10000)/3975+1/298.15)-273.15;   // convert to temperature via datasheet ;
-    
-    
-    Serial.print("a = ");
-    Serial.println(a);
-    Serial.print("resistance = ");
-    Serial.println(resistance);
-    Serial.print("temperature = ");
-    Serial.println(temperature);
-    
     tempRoom = temperature;
     return temperature;
 }
@@ -113,8 +105,8 @@ float HighTemp::getRoomTmp()
 
 float HighTemp::getThmcVol()                                             // get voltage of thmc in mV
 {
-    float vout = (float)getAnalog(pinThmc)/maxAdcValue * analogReference * 1000;
-    float vin  = (vout - VOL_OFFSET)/AMP_AV;
+    float vout = ( ((float)getAnalog(pinThmc)) / maxAdcValue) * analogReference * 1000.0;
+    float vin  = (vout - VOL_OFFSET) / AMP_AV;
     return (vin);    
 }
 
@@ -128,8 +120,9 @@ float HighTemp::K_VtoT(float mV)
     {
         value = Var_VtoT_K[0][8];
 
-        for(i = 8; i >0; i--)
-        value = mV * value + Var_VtoT_K[0][i-1];
+        for(i = 8; i >0; i--) {
+            value = mV * value + Var_VtoT_K[0][i-1];
+        }
     }
     else if(mV >= 0 && mV < 20.644)
     {
@@ -144,8 +137,9 @@ float HighTemp::K_VtoT(float mV)
     {
         value = Var_VtoT_K[2][6];
 
-        for(i = 6; i >0; i--)
-        value = mV * value + Var_VtoT_K[2][i-1];
+        for(i = 6; i >0; i--) {
+            value = mV * value + Var_VtoT_K[2][i-1];
+        }
     }
 
     return value;
