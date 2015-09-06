@@ -24,13 +24,8 @@
 #include <Arduino.h>
 #include "High_Temp_MCP320x.h"
 
-// offset voltage, mv
-const float VOL_OFFSET = 350;                       
-// Av of amplifier
-const float AMP_AV     = 54.16;                    
 
-
-HighTempMCP320x::HighTemp(int _spiCS, int _pinTmp, int _pinThmc)
+HighTempMCP320x::HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc) : HighTemp(_pinTmp, _pinThmc)
 {
     spiChipSelect = _spiCS;
     adc = MCP3208(spiChipSelect); 
@@ -39,12 +34,5 @@ HighTempMCP320x::HighTemp(int _spiCS, int _pinTmp, int _pinThmc)
 
 int HighTempMCP320x::getAnalog(int pin)
 {
-    long sum = 0;
-
-    for(int i=0; i<32; i++)
-    {
-        sum += adc.analogRead(pin);
-    }
-    // 3.3V supply
-    return ((sum>>5));                                              
-
+    return adc.analogRead(pin);
+}

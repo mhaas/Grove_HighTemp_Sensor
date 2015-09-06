@@ -30,7 +30,7 @@ class HighTempMCP320x: public HighTemp{
 
 public:
 
-    HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc) : HighTemp(_pinTmp, _pinThmc);
+    HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc);
     
 private:
     int spiChipSelect;
