@@ -33,7 +33,6 @@ public:
     HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc);
     
 private:
-    int spiChipSelect;
     MCP3208 adc;
  
 public:
