@@ -24,15 +24,23 @@
 #include <Arduino.h>
 #include "High_Temp_MCP320x.h"
 
+const int MCP320X_MAX_ADC = 4095;
 
 HighTempMCP320x::HighTempMCP320x(int _spiCS, int _pinTmp, int _pinThmc) : HighTemp(_pinTmp, _pinThmc)
 {
     adc = MCP3208(_spiCS);
+    setMaxAdcValue(MCP320X_MAX_ADC);
     adc.begin();
 }
 
 
 int HighTempMCP320x::getAnalog(int pin)
 {
-    return adc.analogRead(pin);
+    Serial.print("HighTemp::MCP320x::getAnalog: pin: ");
+    Serial.print(pin);
+    Serial.print(" value: ");
+    int val = adc.analogRead(pin);
+    Serial.print(val);
+    Serial.print("\n");
+    return val;
 }

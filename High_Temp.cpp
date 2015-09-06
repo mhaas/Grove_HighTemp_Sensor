@@ -28,6 +28,10 @@
 const float VOL_OFFSET = 350;                       // offset voltage, mv
 const float AMP_AV     = 54.16;                     // Av of amplifier
 
+const int DEFAULT_MAX_ADC = 1023;
+
+/* Arduino 5V default */
+const float DEFAULT_ANALOG_REF = 5.0;
 
 const float Var_VtoT_K[3][10] =
 {
@@ -45,7 +49,8 @@ HighTemp::HighTemp(int _pinTmp, int _pinThmc)
 
     pinRoomTmp = _pinTmp;
     pinThmc    = _pinThmc;
-    
+    setMaxAdcValue(DEFAULT_MAX_ADC);
+    setAnalogReference(DEFAULT_ANALOG_REF);
 
 }
 
@@ -83,20 +88,23 @@ int HighTemp::getAnalog(int pin)
         sum += analogRead(pin);
     }
 
-    return ((sum>>5));                                              // 3.3V supply
+    return ((sum>>5));
 }
 
 
 float HighTemp::getRoomTmp()
 {
-    int a = getAnalog(pinRoomTmp)*50/33;                                // 3.3V supply
-    float resistance=(float)(1023-a)*10000/a;                           // get the resistance of the sensor;
+    int a = getAnalog(pinRoomTmp)*aref/3.3;                                // 3.3V supply
+    float resistance=(float)(maxAdcValue - a)*10000/a;                           // get the resistance of the sensor;
     float temperature=1/(log(resistance/10000)/3975+1/298.15)-273.15;   // convert to temperature via datasheet ;
     
     
-    Serial.print("a = ");Serial.println(a);
-    Serial.print("resistance = ");Serial.println(resistance);
-   // Serial.print("temperature = ");Serial.println(temperature);
+    Serial.print("a = ");
+    Serial.println(a);
+    Serial.print("resistance = ");
+    Serial.println(resistance);
+    Serial.print("temperature = ");
+    Serial.println(temperature);
     
     tempRoom = temperature;
     return temperature;
@@ -105,7 +113,7 @@ float HighTemp::getRoomTmp()
 
 float HighTemp::getThmcVol()                                             // get voltage of thmc in mV
 {
-    float vout = (float)getAnalog(pinThmc)/1023.0*5.0*1000;
+    float vout = (float)getAnalog(pinThmc)/maxAdcValue * aref * 1000;
     float vin  = (vout - VOL_OFFSET)/AMP_AV;
     return (vin);    
 }
@@ -141,4 +149,12 @@ float HighTemp::K_VtoT(float mV)
     }
 
     return value;
+}
+
+void HighTemp::setMaxAdcValue(int max) {
+    maxAdcValue = max;
+}
+
+void HighTemp::setAnalogReference(int aref) {
+    analogReference = aref;
 }

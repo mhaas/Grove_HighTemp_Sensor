@@ -39,6 +39,9 @@ private:
     float tempThmc;                         // thermocouple temperature
     int pinRoomTmp;                         // pin of temperature sensor
     int pinThmc;                            // pin of thermocouple
+    int maxAdcValue;
+    // Analog reference voltage in volts
+    float analogReference;
 
 
 public:
@@ -46,6 +49,14 @@ public:
     virtual int getAnalog(int pin);
     float K_VtoT(float mV);                 // K type thermocouple, mv->oC
     float getThmcVol();                     // get voltage of thmc in mV
+    /*
+     * The highest value provided by your ADC.
+     * Standard Arduino has 10bit ADC, which returns values between
+     * 0 and 1023. For a 12bit ADC, set the maximum value to 4095.
+     */
+
+    void setMaxAdcValue(int max);
+    void setAnalogReference(float aref);
 };
 
 
