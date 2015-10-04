@@ -21,10 +21,10 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #ifndef __HIGH_TEMP_MCP320x_H__
-#define __HIGH_TEMP_MCPx320x_H__
+#define __HIGH_TEMP_MCP320x_H__
 
 #include <MCP3208.h>
-#include <High_Temp.h>
+#include "High_Temp.h"
 
 class HighTempMCP320x: public HighTemp{
 
